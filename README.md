@@ -42,6 +42,11 @@ The core engine consists of two main Go binaries running in the cluster:
 | `API_PORT`         | Port for the Go REST Server                       | `8080`                       |
 | `STORAGE_ENDPOINT` | MinIO/S3 endpoint for storing graph JSON payloads | `minio.melo-system.svc:9000` |
 | `STORAGE_BUCKET`   | Bucket name for storing graph artifacts           | `melo-graphs`                |
+| `AUTH_PORT`        | Port for the auth service                         | `8081`                       |
+| `AUTH_NAMESPACE`   | Namespace where users and tokens are stored       | `melo-system`                |
+| `AUTH_TOKEN_TTL`   | Lifetime of a login token (Go duration)           | `24h`                        |
+| `MELO_ADMIN_USER`  | Admin user created at startup (with the password) | —                            |
+| `MELO_ADMIN_PASSWORD` | Password for `MELO_ADMIN_USER`                 | —                            |
 
 ### Local Development
 
@@ -67,8 +72,8 @@ The core engine consists of two main Go binaries running in the cluster:
 
 | Method | Path                                     | Description                                                                                                                  |
 |:-------|:-----------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------|
-| `POST` | `/api/v1/auth/login`                     | List all monitored `TerraformApp` resources                                                                                  |
-| `POST` | `/api/v1/auth/logout`                    | Fetch status and plan outputs for a specific app                                                                             |
+| `POST` | `/api/v1/auth/login`                     | Exchange username and password for a bearer token (`{"token": "..."}`)                                                       |
+| `POST` | `/api/v1/auth/logout`                    | Revoke the bearer token sent in the `Authorization` header                                                                   |
 | `GET`  | `/api/v1/apps`                           | List all monitored `TerraformApp` resources                                                                                  |
 | `GET`  | `/api/v1/apps/:name`                     | Fetch status and plan outputs for a specific app                                                                             |
 | `POST` | `/api/v1/apps/:name/sync`                | Patch CRD annotation to trigger immediate sync                                                                               |
